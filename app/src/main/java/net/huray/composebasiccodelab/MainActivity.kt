@@ -3,6 +3,9 @@ package net.huray.composebasiccodelab
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -37,7 +40,6 @@ fun MyApp(modifier: Modifier = Modifier) {
             Greetings();
         }
     }
-
 }
 
 @Composable
@@ -83,7 +85,14 @@ private fun Greetings(
 @Composable
 private fun Greeting(name: String) {
     val expanded = remember { mutableStateOf(false) }
-    val extraPadding = if (expanded.value) 48.dp else 0.dp
+
+    val extraPadding by animateDpAsState(
+        targetValue = if (expanded.value) 48.dp else 10.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
 
     Surface(
         color = MaterialTheme.colorScheme.primary,
